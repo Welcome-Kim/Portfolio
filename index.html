@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김환영 | Marketing & Business Strategy</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & React DOM CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- Babel CDN for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: #fafafa;
+            color: #09090b;
+        }
+        .bw-card {
+            background-color: #ffffff;
+            border: 1px solid #e4e4e7;
+            transition: all 0.2s ease-in-out;
+        }
+        .bw-card:hover {
+            border-color: #18181b;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f4f4f5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a1a1aa;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #71717a;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-zinc-50 text-zinc-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const App = () => {
+            const [activeNav, setActiveNav] = useState('hero');
+            const [selectedHighlightModal, setSelectedHighlightModal] = useState(null);
+            const [selectedExperience, setSelectedExperience] = useState(null);
+            const [selectedProject, setSelectedProject] = useState(null);
+            const [activeProjectTab, setActiveProjectTab] = useState('all');
+            const [sidebarOpen, setSidebarOpen] = useState(false);
+
+            const keyHighlightsData = {
+                education: {
+                    title: "1. 학력: KAIST 석사 (GPA 4.15 / 4.30)",
+                    icon: "fa-graduation-cap",
+                    bullets: [
+                        "KAIST 기술경영학부 (Business and Technology Management) 석사 졸업",
+                        "경영전략 연구실 랩장 수행 (https://sites.google.com/view/hyunjujunglab)",
+                        "2024, 2025 KAIST 학업우수자 (High Honor) 2년 연속 선정"
+                    ],
+                    link: "https://sites.google.com/view/hyunjujunglab"
+                },
+                grants: {
+                    title: "2. 연구과제 & 수상: 한국연구재단 과제 2건 / 수상 7건",
+                    icon: "fa-trophy",
+                    bullets: [
+                        "2026 BTM Research Workshop 'Outstanding Idea Award' 수상",
+                        "2025 KAIST 학업우수자 (High Honor) 선정",
+                        "한국연구재단 석사과정 연구장려금 과제 최종 선정",
+                        "한국연구재단 중견연구자 지원사업 부분 과제 선정 및 수행",
+                        "2024 KAIST 학업우수자 (High Honor) 선정",
+                        "아산나눔재단 Innovation Sprint 2024 동상 수상",
+                        "헝가리 정부초청장학생 (Stipendium Hungaricum) 국비 선발"
+                    ]
+                },
+                languages: {
+                    title: "3. 어학 / 자격: English AL, HSK 5급, GTQ 1급",
+                    icon: "fa-language",
+                    bullets: [
+                        "English: OPIc AL (2025.08) - 비즈니스 회화 및 영어 계약 검토 가능",
+                        "Chinese: 신HSK 5급 226점 (2026.01) - 커뮤니케이션 가능",
+                        "Graphics: GTQ 그래픽기술자격 1급 (2023.04) - 디자인 자산 제작 가능"
+                    ]
+                }
+            };
+
+            const experiences = [
+                {
+                    id: "exp_intellian",
+                    period: "2026.04 ~ 현재",
+                    company: "인텔리안테크 (Intellian Technologies)",
+                    role: "마케팅커뮤니케이션팀",
+                    type: "정규직",
+                    tags: ["#PR분석", "#Salesforce", "#기업리브랜딩", "#마케팅자산", "#글로벌전시"],
+                    desc: "글로벌 위성/해양 통신 시장 PR 분석 대시보드 구축, 기업 리브랜딩, 마케팅 자산 제작 및 글로벌 전시 지원",
+                    actions: [
+                        "구글 RSS 및 웹 스크래핑 기반 글로벌 위성·해양 통신 PR 동향 분석 대시보드 구축 및 경영진 보고 체계 수립",
+                        "Salesforce CRM 기반 글로벌 B2B 고객 데이터 세그먼테이션 및 타겟 마케팅 캠페인 수립·실행",
+                        "신규 기업 브랜드 가이드라인 수립, 웹사이트 개편 지원 및 주요 제품 홍보 영상 기획·제작 총괄",
+                        "글로벌 주요 B2B 전시회 예산 수립, 부스 디자인 커스텀, 현장 운영, 참관객 DB 수집 및 세일즈 파이프라인 연계"
+                    ],
+                    results: [
+                        "Share of Voice (SoV) 정량 지표 개발 및 정기 경영진 리포팅 프로세스 정착",
+                        "신규 글로벌 웹사이트 구축 및 브랜드 가이드라인 단권화 완성"
+                    ]
+                },
+                {
+                    id: "exp_gcc",
+                    period: "2025.03 ~ 2025.08",
+                    company: "글로벌기술사업화센터 (GCC)",
+                    role: "학생연구원 (RA) / 과제 수행",
+                    type: "",
+                    tags: ["#바이오산업", "#기술사업화", "#특허데이터", "#기업평가지표"],
+                    desc: "해외 진출을 희망하는 국내 바이오 기업 대상 기술성 및 사업성 평가 지표 구축과 특허 데이터 분석",
+                    actions: [
+                        "글로벌 바이오·디지털 헬스케어 시장 진출 희망 국내 기업 대상 기술 경쟁력 및 글로벌 사업성 정량 평가 수행",
+                        "글로벌 바이오 대기업 R&D 트렌드 분석 및 기술분류코드(IPC/CPC) 기반 핵심 특허 텍스트 데이터 마이닝",
+                        "상업 특허 분석 툴(KPEG, KIPRIS, KPAS)과 독자 평가 모델(인용 네트워크, 기술 신규성)을 결합한 기업 평가 지표 수립",
+                        "연구 결과 시각화, 학술 포스터 및 대외 홍보 자산 기획·제작"
+                    ],
+                    results: [
+                        "특허 정량 분석 기반 기술성·사업성 평가 프레임워크 및 대시보드 구조 완성"
+                    ]
+                },
+                {
+                    id: "exp_kaist",
+                    period: "2024.02 ~ 2026.02",
+                    company: "KAIST 한국과학기술원",
+                    role: "기술경영학 석사 (경영전략 연구실 랩장)",
+                    type: "학위 과정",
+                    tags: ["#경영전략", "#빅데이터마이닝", "#머신러닝", "#CapSim강의"],
+                    desc: "GPA 4.15/4.30 졸업. 바이오 및 AI 기업 자원 배치 연구, OLS/Logistics 회귀분석, CapSim 시뮬레이션 강의",
+                    actions: [
+                        "바이오·AI 기업의 기술 혁신성 측정 및 R&D 특허 패널 데이터 기반 빅데이터 마이닝 연구 진행",
+                        "Python 및 Stata를 활용한 데이터 전처리, 머신러닝 알고리즘 적용 및 OLS/Logistics 회귀분석 모델링 수행",
+                        "KAIST OCI MBA 및 학부 경영전략 과목 대상 CapSim 시뮬레이션 강의, 전략 피드백 리포트 작성 및 실행 가이드 제공",
+                        "경영전략 연구실 랩장으로서 정부 및 산학 연구과제 기획·수주, 연구실 프로젝트 및 연구진 총괄 관리"
+                    ],
+                    results: [
+                        "GPA 4.15 / 4.30 졸업 및 2024, 2025 KAIST 학업우수자 (High Honor) 2년 연속 선정",
+                        "한국연구재단 석사과정 연구장려금 및 중견연구자지원사업 부분 과제 2건 최종 선정",
+                        "2026 BTM Research Workshop 'Outstanding Idea Award' 수상"
+                    ]
+                },
+                {
+                    id: "exp_contec",
+                    period: "2020.06 ~ 2023.06",
+                    company: "(주)컨텍 (CONTEC)",
+                    role: "국제협력팀 / 마케팅팀 주임연구원",
+                    type: "정규직",
+                    tags: ["#시장조사", "#뉴스레터", "#글로벌협업", "#전시총괄"],
+                    desc: "전 세계 20개국 글로벌 우주 네트워크 파트너십 구축, 국내외 전시회 30여 건 총괄, 뉴스레터 및 SNS 채널 성장 주도",
+                    actions: [
+                        "뉴스레터, 네이버 블로그, LinkedIn, YouTube 등 글로벌 멀티채널 마케팅 전략 수립 및 콘텐츠 통합 기획·발행",
+                        "글로벌 우주산업 동향 및 주요 기업 뉴스 정성적 분석, 분기별 시장조사 세미나 개최 및 카드뉴스 기획",
+                        "해외 지상국 구축 사업 지원 및 영문 계약서(NDA, MoU, Service Level Agreement) 검토·협상 참여",
+                        "국내외 주요 우주/항공 산업 전시회 30여 건의 기획, 부스 디자인, 세션 참가, 현장 마케팅 전 과정 총괄"
+                    ],
+                    results: [
+                        "해외 파트너십 및 법률 계약 30여 건 체결 지원으로 글로벌 협력 네트워크 기반 마련",
+                        "이메일 뉴스레터 구독자 2,000명 및 글로벌 SNS 팔로워 18,000명 달성"
+                    ]
+                },
+                {
+                    id: "exp_hotusa",
+                    period: "2019.02 ~ 2019.08",
+                    company: "Hotusa Group: Eurostars Hotel (헝가리)",
+                    role: "경영지원 인턴",
+                    type: "인턴",
+                    tags: ["#고객응대", "#SAP", "#제휴사관리"],
+                    desc: "SAP 기반 예약·매출 데이터 통합 관리, 제휴 에이전시 커뮤니케이션 및 글로벌 고객 서비스 지원",
+                    actions: [
+                        "SAP ERP 시스템 기반 객실 예약 데이터 실시간 트래킹 및 일별 매출 보고서 작성 지원",
+                        "현지 및 글로벌 제휴 여행 에이전시 커뮤니케이션, 예약 관리 프로세스 효율화 지원",
+                        "다국적 방문 고객 현장 응대 및 서비스 품질 관리 지원"
+                    ],
+                    results: [
+                        "글로벌 ERP 활용 능력 확보 및 글로벌 비즈니스 현장 실무 역량 배양"
+                    ]
+                }
+            ];
+
+            const projects = [
+                {
+                    id: "mkt_res_1",
+                    category: "market",
+                    categoryName: "시장조사",
+                    title: "글로벌 위성/해양 통신 산업 PR 분석",
+                    period: "2026.04 ~ 현재",
+                    organization: "인텔리안테크 마케팅커뮤니케이션팀",
+                    summary: "구글 RSS 크롤링 기반 뉴스 데이터 자동 분류 및 Share of Voice(SoV) 대시보드 구축을 통한 PR 전략 수립",
+                    actions: [
+                        "구글 RSS 및 웹 스크래핑을 활용하여 글로벌 위성·해양 통신 관련 국영문 기사 자동 수집 및 주제별 분류 파이프라인 구축",
+                        "기업별 언론 노출 빈도, 핵심 키워드, 카테고리별 비중을 실시간 파악할 수 있는 HTML 기반 PR 분석 대시보드 개발",
+                        "Share of Voice (SoV) 및 시계열 트렌드 분석을 기반으로 마케팅 커뮤니케이션 및 PR 신규 캠페인 시점 도출 및 보고"
+                    ],
+                    results: [
+                        "정량적 SoV 분석 체계 도입을 통해 미디어 노출 현황 실시간 파악 및 전략적 PR 기획 기반 마련",
+                        "시계열 키워드 트렌드 분석으로 신제품 출시 및 메시징 최적 타겟 시점 도출"
+                    ]
+                },
+                {
+                    id: "mkt_res_2",
+                    category: "market",
+                    categoryName: "시장조사",
+                    title: "글로벌 우주산업 시장조사 및 콘텐츠 발행",
+                    period: "2020.06 ~ 2023.06",
+                    organization: "(주)컨텍 마케팅팀",
+                    summary: "해외 전문 리포트 및 기업 기사 정성 분석을 기반으로 한 시장 동향 도출 및 타겟 마케팅 콘텐츠 제작",
+                    actions: [
+                        "Euroconsult, BryceTech 등 우주산업 전문 해외 분석 리포트 및 글로벌 기업 기사를 종합한 정성적 시장 동향 분석 수행",
+                        "분석된 시장 인사이트를 바탕으로 사내 전략 세미나 기획 및 타겟 고객 대상 이메일 뉴스레터/SNS 카드뉴스 기획·발행",
+                        "우주 지상국 및 위성 데이터 응용 분야 기술 트렌드를 시각화하여 대외 홍보 채널에 정기 탑재"
+                    ],
+                    results: [
+                        "뉴스레터 구독자 2,000명 달성 및 산업 내 리드 창출을 위한 유망 타겟 모수 확보"
+                    ]
+                },
+                {
+                    id: "data_1",
+                    category: "data",
+                    categoryName: "데이터분석",
+                    title: "글로벌 바이오 산업 기술분석을 위한 특허분석",
+                    period: "2025.03 ~ 2025.08",
+                    organization: "KAIST 글로벌기술사업화센터 (GCC)",
+                    summary: "특허 빅데이터 기반 기업 기술 혁신성 및 수익성 정량 평가 지표 체계 수립",
+                    actions: [
+                        "IPC/CPC 기술분류코드 및 인용 네트워크 분석을 통해 글로벌 바이오 기업의 기술 혁신성 및 독창성 지표 산출",
+                        "특허 권리범위 및 재무적 가치 데이터를 결합하여 기술 Profitability 및 사업적 가치 측정 모델 수립",
+                        "분석 결과를 시각화 대시보드로 구성하여 해외 진출 희망 기업의 기술 사업화 가능성 진단에 활용"
+                    ],
+                    results: [
+                        "바이오·AI 융합 분야 특허 정량 평가 프레임워크 구축으로 신기술 사업성 진단 프로세스 표준화"
+                    ]
+                },
+                {
+                    id: "data_2",
+                    category: "data",
+                    categoryName: "데이터분석",
+                    title: "카이스트 학부연구생 연구프로그램(URP) 지도",
+                    period: "2025.02 ~ 2025.08",
+                    organization: "KAIST 경영전략연구실",
+                    summary: "F&B 산업의 AI 기술(AX) 도입 현황 분석 연구 지도 및 대표 AI 스타트업 심층 인터뷰",
+                    actions: [
+                        "F&B 산업 내 AI/자동화 기술 도입 흐름 분석을 위한 연구 설계 지도 및 특허 출원 데이터 마이닝 가이드",
+                        "국내 대표 AI 기반 F&B 스타트업(FAIR, LivFARM) C-Level/연구진 대상 현장 인터뷰 설계 및 실행",
+                        "기술 수용 장애 요소(비용, 기존 인프라 호환성 등) 분석 및 산업별 맞춤형 AX 도입 전략 프레임워크 도출"
+                    ],
+                    results: [
+                        "F&B 산업의 AX 핵심 트렌드 및 기술 도입 저해 요소 도출을 통한 실무적 개선 가이드라인 정립"
+                    ]
+                },
+                {
+                    id: "consulting_1",
+                    category: "consulting",
+                    categoryName: "컨설팅",
+                    title: "기업 경영 시뮬레이션 수업 강의 및 성과 컨설팅",
+                    period: "2024, 2025 (2025.06)",
+                    organization: "학부생 경영전략 수업 / OCI 카이스트 MBA 과정",
+                    summary: "CapSim 경영 시뮬레이션 기반 기업 경영 지표 정밀 분석 및 피드백 리포팅 체계 구축",
+                    actions: [
+                        "KAIST 학부 및 OCI MBA 수강생 대상 CapSim 시뮬레이션 모듈 운영 및 경영 전략 수립 가이드 제공",
+                        "R&D, 마케팅, 생산, 재무 등 기업 전반의 주요 경영 지표를 시각화하여 팀별 손익 및 경쟁력 진단",
+                        "각 팀의 전략적 의사결정 오류를 분석하고 실시간 피드백 리포트를 제작하여 시뮬레이션 성과 개선 지원"
+                    ],
+                    results: [
+                        "CapSim 기반 경영 지표 시각화 및 B2B 전략 컨설팅 피드백 리포팅 프로세스 완성"
+                    ]
+                },
+                {
+                    id: "branding_1",
+                    category: "branding",
+                    categoryName: "브랜딩 / 디자인",
+                    title: "브랜딩 및 마케팅 자산 제작",
+                    period: "2020.06 ~ 현재",
+                    organization: "인텔리안테크 / (주)컨텍",
+                    summary: "기업 브랜드 정체성 재정립, 브랜드 가이드라인 수립 및 디지털/오프라인 마케팅 자산 통합 개발",
+                    actions: [
+                        "기업 이미지 제고를 위한 글로벌 브랜드 가이드라인 수립 및 신규 웹사이트 UI/UX 구조 기획 지원",
+                        "제품의 핵심 경쟁력을 직관적으로 전달하는 홍보 영상 2편의 스토리보드 기획, 제작 및 유통 총괄",
+                        "일관된 브랜드 정체성을 유지하기 위한 사내외 온·오프라인 마케팅 자산(소개서, 리플렛, 배너 등) 제작 표준화"
+                    ],
+                    results: [
+                        "신규 글로벌 웹사이트 구축 및 통합 브랜드 가이드라인 책자/파일 완성",
+                        "제품 홍보 영상 2편 제작 완료 및 마케팅 자산 전반의 디자인 통일성 확보"
+                    ]
+                },
+                {
+                    id: "sales_1",
+                    category: "sales",
+                    categoryName: "영업 지원 / 마케팅",
+                    title: "글로벌 전시회 총괄 및 B2B 참관객 파이프라인 관리",
+                    period: "2020~2023, 2026~현재",
+                    organization: "인텔리안테크 / (주)컨텍 마케팅팀",
+                    summary: "국내외 30여 건의 B2B 전시회 기획부터 부스 운영, 참관객 DB 관리 및 세일즈 연계 전 과정 수립",
+                    actions: [
+                        "연간 글로벌 전시회 참가 전략 및 예산 기획, 부스 동선 및 브랜드 메시지 시각화 디자인 총괄",
+                        "전시 현장 마케팅 및 기업 소개 세션 발표 진행, 리드 스캐닝을 통한 참관객 DB 수집",
+                        "전시 종료 후 수집된 바이어 DB를 분류하여 영업팀 이관 및 세일즈 파이프라인 지속 모니터링"
+                    ],
+                    results: [
+                        "국내외 B2B 전시회 30여 건 총괄·지원을 통해 글로벌 브랜드 인지도 제고 및 유망 잠재고객 리드 도출"
+                    ]
+                },
+                {
+                    id: "sales_2",
+                    category: "sales",
+                    categoryName: "영업 지원 / 마케팅",
+                    title: "글로벌 협력사 협업 지원 & 계약 검토",
+                    period: "2020.06 ~ 2023.06",
+                    organization: "(주)컨텍 국제협력팀",
+                    summary: "전 세계 20개국 우주/위성 분야 파트너십 구축 미팅 주도 및 영문 계약서 검토 지원",
+                    actions: [
+                        "전 세계 20개국 주요 유관 기관 및 기업과의 글로벌 파트너십 미팅 세팅, 협안 안건 기획 및 실행",
+                        "영문 legal document(NDA, MoU, Service Level Agreement 등)의 마케팅 및 사업적 조건 조항 사전 검토",
+                        "해외 협력사와의 커뮤니케이션 창구로서 계약 이행 현황 관리 및 지속적 글로벌 관계 구축"
+                    ],
+                    results: [
+                        "약 30건 이상의 글로벌 NDA / MoU 및 서비스 계약서 체결 성공적 지원"
+                    ]
+                }
+            ];
+
+            const filteredProjects = activeProjectTab === 'all' 
+                ? projects 
+                : projects.filter(p => p.category === activeProjectTab);
+
+            return (
+                <div className="min-h-screen bg-zinc-50 text-zinc-900 flex flex-col md:flex-row font-sans">
+                    {/* Sidebar Navigation */}
+                    <aside className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-zinc-200 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-200 ease-in-out flex flex-col justify-between shadow-sm`}>
+                        <div className="p-6 space-y-6">
+                            {/* Profile Header */}
+                            <div className="border-b border-zinc-100 pb-5">
+                                <div className="w-12 h-12 rounded-xl bg-zinc-900 text-white flex items-center justify-center font-bold text-xl shadow-md mb-3">
+                                    HY
+                                </div>
+                                <h1 className="text-lg font-bold text-zinc-900">김환영</h1>
+                                <p className="text-xs text-zinc-500 font-medium">Marketing & Business Strategy</p>
+                            </div>
+
+                            {/* Nav Menu */}
+                            <nav className="space-y-1 text-sm font-medium">
+                                <a 
+                                    href="#hero" 
+                                    onClick={() => { setActiveNav('hero'); setSidebarOpen(false); }}
+                                    className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors ${activeNav === 'hero' ? 'bg-zinc-900 text-white' : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'}`}
+                                >
+                                    <i className="fa-solid fa-user text-xs w-4"></i>
+                                    <span>Intro</span>
+                                </a>
+                                <a 
+                                    href="#experience" 
+                                    onClick={() => { setActiveNav('experience'); setSidebarOpen(false); }}
+                                    className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors ${activeNav === 'experience' ? 'bg-zinc-900 text-white' : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'}`}
+                                >
+                                    <i className="fa-solid fa-briefcase text-xs w-4"></i>
+                                    <span>Career Experience</span>
+                                </a>
+                                <a 
+                                    href="#education" 
+                                    onClick={() => { setActiveNav('education'); setSidebarOpen(false); }}
+                                    className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors ${activeNav === 'education' ? 'bg-zinc-900 text-white' : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'}`}
+                                >
+                                    <i className="fa-solid fa-graduation-cap text-xs w-4"></i>
+                                    <span>Education & Skills</span>
+                                </a>
+                                <a 
+                                    href="#awards" 
+                                    onClick={() => { setActiveNav('awards'); setSidebarOpen(false); }}
+                                    className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors ${activeNav === 'awards' ? 'bg-zinc-900 text-white' : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'}`}
+                                >
+                                    <i className="fa-solid fa-trophy text-xs w-4"></i>
+                                    <span>Grants & Awards</span>
+                                </a>
+                                <a 
+                                    href="#projects" 
+                                    onClick={() => { setActiveNav('projects'); setSidebarOpen(false); }}
+                                    className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors ${activeNav === 'projects' ? 'bg-zinc-900 text-white' : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'}`}
+                                >
+                                    <i className="fa-solid fa-layer-group text-xs w-4"></i>
+                                    <span>Projects</span>
+                                </a>
+                            </nav>
+                        </div>
+
+                        {/* Contact Information */}
+                        <div className="p-6 border-t border-zinc-200 text-xs text-zinc-500 space-y-2">
+                            <div className="flex items-center space-x-2">
+                                <i className="fa-regular fa-envelope text-zinc-400"></i>
+                                <span className="truncate">hwanyoungkim96@gmail.com</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <i className="fa-solid fa-phone text-zinc-400"></i>
+                                <span>010-5212-0281</span>
+                            </div>
+                        </div>
+                    </aside>
+
+                    {/* Mobile Header Bar */}
+                    <div className="md:hidden sticky top-0 z-30 bg-white border-b border-zinc-200 px-4 py-3 flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                            <div className="w-8 h-8 rounded-lg bg-zinc-900 text-white flex items-center justify-center font-bold text-sm">
+                                HY
+                            </div>
+                            <span className="font-bold text-zinc-900 text-sm">김환영 포트폴리오</span>
+                        </div>
+                        <button 
+                            onClick={() => setSidebarOpen(!sidebarOpen)}
+                            className="p-2 text-zinc-600 hover:text-zinc-900 rounded-lg hover:bg-zinc-100"
+                        >
+                            <i className="fa-solid fa-bars text-lg"></i>
+                        </button>
+                    </div>
+
+                    {/* Mobile Menu Backdrop Overlay */}
+                    {sidebarOpen && (
+                        <div 
+                            className="fixed inset-0 bg-zinc-900/40 z-30 md:hidden"
+                            onClick={() => setSidebarOpen(false)}
+                        ></div>
+                    )}
+
+                    {}
+                    <main className="flex-1 md:ml-64 p-6 md:p-12 space-y-16 max-w-6xl">
+                        
+                        {/* Hero / Intro Section */}
+                        <section id="hero" className="scroll-mt-12 space-y-8">
+                            <div className="bg-white p-8 md:p-10 rounded-2xl border border-zinc-200 shadow-sm space-y-6">
+                                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-zinc-100 text-zinc-800 text-xs font-semibold border border-zinc-200">
+                                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                    <span>인텔리안테크 마케팅커뮤니케이션팀 (2026.04 ~ 현재)</span>
+                                </div>
+
+                                <h2 className="text-3xl md:text-5xl font-black text-zinc-900 leading-tight tracking-tight">
+                                    데이터로 시장의 기회를 발견하는<br />
+                                    전략 & 마케팅 기획자
+                                </h2>
+
+                                <p className="text-zinc-600 text-sm md:text-base leading-relaxed">
+                                    B2B 기업 마케터로서 3년간 실무 경력을 쌓고, KAIST 석사 과정에서 데이터 기반 연구를 진행하며 경영전략에 대한 전문성을 확장했습니다. 
+                                    고객 유입 및 방문 기록, 마케팅 예산 등의 내부 정량 데이터와 기사 크롤링 및 특허 분석 등 외부 시장 데이터를 종합적으로 구조화합니다. 
+                                    이를 기반으로 기업과 산업 전반의 핵심 흐름을 진단하고, 실효성 있는 전략적 방향성과 인사이트를 도출합니다.
+                                </p>
+
+                                {/* Key Highlight Quick Access */}
+                                <div className="pt-4 border-t border-zinc-100 space-y-3">
+                                    <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Key Highlights</h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        <button 
+                                            onClick={() => setSelectedHighlightModal(keyHighlightsData.education)}
+                                            className="px-3 py-2 rounded-xl bg-zinc-50 hover:bg-zinc-900 hover:text-white text-zinc-800 text-xs font-semibold border border-zinc-200 transition-all flex items-center gap-1.5 shadow-sm"
+                                        >
+                                            <i className="fa-solid fa-graduation-cap text-zinc-500"></i>
+                                            <span>1. KAIST 석사 (GPA 4.15/4.3)</span>
+                                        </button>
+
+                                        <button 
+                                            onClick={() => setSelectedHighlightModal(keyHighlightsData.grants)}
+                                            className="px-3 py-2 rounded-xl bg-zinc-50 hover:bg-zinc-900 hover:text-white text-zinc-800 text-xs font-semibold border border-zinc-200 transition-all flex items-center gap-1.5 shadow-sm"
+                                        >
+                                            <i className="fa-solid fa-trophy text-zinc-500"></i>
+                                            <span>2. 연구과제 2건 / 수상 7건</span>
+                                        </button>
+
+                                        <button 
+                                            onClick={() => setSelectedHighlightModal(keyHighlightsData.languages)}
+                                            className="px-3 py-2 rounded-xl bg-zinc-50 hover:bg-zinc-900 hover:text-white text-zinc-800 text-xs font-semibold border border-zinc-200 transition-all flex items-center gap-1.5 shadow-sm"
+                                        >
+                                            <i className="fa-solid fa-language text-zinc-500"></i>
+                                            <span>3. OPIc AL, HSK 5급, GTQ 1급</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Experience Section */}
+                        <section id="experience" className="scroll-mt-12 space-y-6">
+                            <div className="flex items-center justify-between border-b border-zinc-200 pb-3">
+                                <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-2">
+                                    <i className="fa-solid fa-briefcase text-zinc-700"></i>
+                                    <span>Career Experience</span>
+                                </h3>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-4">
+                                {experiences.map((exp) => (
+                                    <div 
+                                        key={exp.id} 
+                                        onClick={() => setSelectedExperience(exp)}
+                                        className="bw-card p-6 rounded-2xl cursor-pointer group flex flex-col md:flex-row md:items-center justify-between gap-4"
+                                    >
+                                        <div className="space-y-2 flex-1">
+                                            <div className="flex flex-wrap items-center gap-2">
+                                                <span className="text-xs font-bold text-zinc-500 bg-zinc-100 px-2.5 py-0.5 rounded-md">{exp.period}</span>
+                                                <span className="text-xs font-semibold px-2 py-0.5 rounded border border-zinc-200 text-zinc-600">{exp.role}</span>
+                                            </div>
+                                            <h4 className="text-lg font-bold text-zinc-900 group-hover:text-black transition-colors">{exp.company}</h4>
+                                            <p className="text-xs text-zinc-600 line-clamp-2 leading-relaxed">{exp.desc}</p>
+                                            <div className="flex flex-wrap gap-1.5 pt-1">
+                                                {exp.tags.map((tg, i) => (
+                                                    <span key={i} className="text-[10px] text-zinc-500 bg-zinc-50 px-2 py-0.5 rounded border border-zinc-200">
+                                                        {tg}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center justify-end text-xs font-bold text-zinc-900 group-hover:translate-x-1 transition-transform shrink-0">
+                                            <span className="mr-1">상세보기</span>
+                                            <i className="fa-solid fa-arrow-right"></i>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        {/* Education Section */}
+                        <section id="education" className="scroll-mt-12 space-y-6">
+                            <div className="border-b border-zinc-200 pb-3">
+                                <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-2">
+                                    <i className="fa-solid fa-graduation-cap text-zinc-700"></i>
+                                    <span>Education & Certifications</span>
+                                </h3>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Education Info */}
+                                <div className="bw-card p-6 rounded-2xl space-y-4">
+                                    <h4 className="font-bold text-sm text-zinc-900 uppercase tracking-wider border-b border-zinc-100 pb-2 flex items-center justify-between">
+                                        <span>학력 사항</span>
+                                        <i className="fa-solid fa-school text-zinc-400"></i>
+                                    </h4>
+
+                                    <div className="space-y-4 text-xs">
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between font-bold text-zinc-900 text-sm">
+                                                <span>KAIST 한국과학기술원</span>
+                                                <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">GPA 4.15 / 4.30</span>
+                                            </div>
+                                            <p className="text-zinc-600">기술경영학 석사 | 경영전략 연구실 (2024.02 ~ 2026.02 졸업)</p>
+                                            <p className="text-zinc-500 pt-1">• 2024, 2025 학업우수자 (High Honor) 연속 선정</p>
+                                        </div>
+
+                                        <div className="border-t border-zinc-100 pt-3 space-y-1">
+                                            <div className="flex justify-between font-bold text-zinc-900 text-sm">
+                                                <span>Budapest Business University</span>
+                                                <span className="text-zinc-600 bg-zinc-100 px-2 py-0.5 rounded">GPA 4.0 / 5.0</span>
+                                            </div>
+                                            <p className="text-zinc-600">호텔경영학 학사 | 헝가리 (2016.09 ~ 2020.02 졸업)</p>
+                                            <p className="text-zinc-500 pt-1">• 헝가리 정부초청장학생 (Stipendium Hungaricum) 선발</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Language and Certifications */}
+                                <div className="bw-card p-6 rounded-2xl space-y-4">
+                                    <h4 className="font-bold text-sm text-zinc-900 uppercase tracking-wider border-b border-zinc-100 pb-2 flex items-center justify-between">
+                                        <span>어학 & 자격사항</span>
+                                        <i className="fa-solid fa-certificate text-zinc-400"></i>
+                                    </h4>
+
+                                    <div className="space-y-3 text-xs">
+                                        <div className="flex justify-between border-b border-zinc-100 pb-2">
+                                            <span className="text-zinc-500 font-medium">English:</span>
+                                            <span className="text-zinc-900 font-bold">OPIc AL (2025.08)</span>
+                                        </div>
+                                        <div className="flex justify-between border-b border-zinc-100 pb-2">
+                                            <span className="text-zinc-500 font-medium">Chinese:</span>
+                                            <span className="text-zinc-900 font-bold">신HSK 5급, 226/300점 (2026.01)</span>
+                                        </div>
+                                        <div className="flex justify-between pb-1">
+                                            <span className="text-zinc-500 font-medium">Graphics:</span>
+                                            <span className="text-zinc-900 font-bold">GTQ 1급 (2023.04)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Awards Section */}
+                        <section id="awards" className="scroll-mt-12 space-y-6">
+                            <div className="border-b border-zinc-200 pb-3">
+                                <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-2">
+                                    <i className="fa-solid fa-trophy text-zinc-700"></i>
+                                    <span>Grants & Awards</span>
+                                </h3>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div className="bw-card p-4 rounded-xl space-y-1">
+                                    <span className="text-[11px] font-bold text-zinc-500">2026.02</span>
+                                    <h4 className="text-sm font-bold text-zinc-900">Outstanding Idea Award 수상</h4>
+                                    <p className="text-xs text-zinc-500">2026 BTM Research Workshop</p>
+                                </div>
+
+                                <div className="bw-card p-4 rounded-xl space-y-1">
+                                    <span className="text-[11px] font-bold text-zinc-500">2026.02 / 2025.05</span>
+                                    <h4 className="text-sm font-bold text-zinc-900">KAIST 학업우수자 (High Honor)</h4>
+                                    <p className="text-xs text-zinc-500">2024 & 2025 연속 선정</p>
+                                </div>
+
+                                <div className="bw-card p-4 rounded-xl space-y-1">
+                                    <span className="text-[11px] font-bold text-zinc-500">2025.09</span>
+                                    <h4 className="text-sm font-bold text-zinc-900">석사과정 연구장려금 과제 선정</h4>
+                                    <p className="text-xs text-zinc-500">한국연구재단 주관</p>
+                                </div>
+
+                                <div className="bw-card p-4 rounded-xl space-y-1">
+                                    <span className="text-[11px] font-bold text-zinc-500">2025.06</span>
+                                    <h4 className="text-sm font-bold text-zinc-900">중견연구자지원사업 부분과제 선정</h4>
+                                    <p className="text-xs text-zinc-500">한국연구재단 주관</p>
+                                </div>
+
+                                <div className="bw-card p-4 rounded-xl space-y-1">
+                                    <span className="text-[11px] font-bold text-zinc-500">2024.08</span>
+                                    <h4 className="text-sm font-bold text-zinc-900">Innovation Sprint 2024 동상</h4>
+                                    <p className="text-xs text-zinc-500">아산나눔재단 주관</p>
+                                </div>
+
+                                <div className="bw-card p-4 rounded-xl space-y-1">
+                                    <span className="text-[11px] font-bold text-zinc-500">2016.09</span>
+                                    <h4 className="text-sm font-bold text-zinc-900">헝가리 정부초청장학생 선발</h4>
+                                    <p className="text-xs text-zinc-500">Stipendium Hungaricum</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Projects Section */}
+                        <section id="projects" className="scroll-mt-12 space-y-6 pt-4 border-t border-zinc-200">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div>
+                                    <h3 className="text-2xl font-black text-zinc-900 flex items-center gap-2">
+                                        <i className="fa-solid fa-layer-group text-zinc-700"></i>
+                                        <span>Projects</span>
+                                    </h3>
+                                </div>
+
+                                {/* Category Filter Buttons */}
+                                <div className="flex flex-wrap rounded-xl bg-zinc-100 p-1 border border-zinc-200 text-xs gap-1">
+                                    <button 
+                                        onClick={() => setActiveProjectTab('all')}
+                                        className={`px-3 py-1.5 rounded-lg font-bold transition-all ${activeProjectTab === 'all' ? 'bg-zinc-900 text-white shadow-sm' : 'text-zinc-600 hover:text-zinc-900'}`}
+                                    >
+                                        전체
+                                    </button>
+                                    <button 
+                                        onClick={() => setActiveProjectTab('market')}
+                                        className={`px-3 py-1.5 rounded-lg font-bold transition-all ${activeProjectTab === 'market' ? 'bg-zinc-900 text-white shadow-sm' : 'text-zinc-600 hover:text-zinc-900'}`}
+                                    >
+                                        시장조사
+                                    </button>
+                                    <button 
+                                        onClick={() => setActiveProjectTab('data')}
+                                        className={`px-3 py-1.5 rounded-lg font-bold transition-all ${activeProjectTab === 'data' ? 'bg-zinc-900 text-white shadow-sm' : 'text-zinc-600 hover:text-zinc-900'}`}
+                                    >
+                                        데이터분석
+                                    </button>
+                                    <button 
+                                        onClick={() => setActiveProjectTab('consulting')}
+                                        className={`px-3 py-1.5 rounded-lg font-bold transition-all ${activeProjectTab === 'consulting' ? 'bg-zinc-900 text-white shadow-sm' : 'text-zinc-600 hover:text-zinc-900'}`}
+                                    >
+                                        컨설팅
+                                    </button>
+                                    <button 
+                                        onClick={() => setActiveProjectTab('branding')}
+                                        className={`px-3 py-1.5 rounded-lg font-bold transition-all ${activeProjectTab === 'branding' ? 'bg-zinc-900 text-white shadow-sm' : 'text-zinc-600 hover:text-zinc-900'}`}
+                                    >
+                                        브랜딩 / 디자인
+                                    </button>
+                                    <button 
+                                        onClick={() => setActiveProjectTab('sales')}
+                                        className={`px-3 py-1.5 rounded-lg font-bold transition-all ${activeProjectTab === 'sales' ? 'bg-zinc-900 text-white shadow-sm' : 'text-zinc-600 hover:text-zinc-900'}`}
+                                    >
+                                        영업 지원 / 마케팅
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Projects Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {filteredProjects.map((p) => (
+                                    <div 
+                                        key={p.id} 
+                                        onClick={() => setSelectedProject(p)}
+                                        className="bw-card p-6 rounded-2xl flex flex-col justify-between space-y-4 cursor-pointer group"
+                                    >
+                                        <div className="space-y-3">
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-xs px-2.5 py-0.5 rounded-md bg-zinc-100 text-zinc-900 font-bold border border-zinc-200">{p.categoryName}</span>
+                                                <span className="text-xs text-zinc-400 font-medium">{p.period}</span>
+                                            </div>
+
+                                            <h4 className="text-lg font-bold text-zinc-900 group-hover:text-black leading-snug">{p.title}</h4>
+                                            <p className="text-xs text-zinc-500 font-medium">{p.organization}</p>
+
+                                            <p className="text-xs text-zinc-600 leading-relaxed bg-zinc-50 p-3 rounded-xl border border-zinc-100">
+                                                {p.summary}
+                                            </p>
+                                        </div>
+
+                                        <div className="pt-3 border-t border-zinc-100 flex items-center justify-end">
+                                            <span className="text-xs font-bold text-zinc-900 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                                                <span>상세보기</span>
+                                                <i className="fa-solid fa-arrow-right text-[10px]"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        {/* Page Footer */}
+                        <footer className="pt-8 border-t border-zinc-200 text-xs text-zinc-400 flex flex-col sm:flex-row justify-between items-center gap-4">
+                            <p>© 2026 Kim Hwan Young. All rights reserved.</p>
+                            <div className="flex space-x-4">
+                                <span>hwanyoungkim96@gmail.com</span>
+                                <span>•</span>
+                                <span>010-5212-0281</span>
+                            </div>
+                        </footer>
+                    </main>
+
+                    {}
+                    {/* Key Highlight Modal */}
+                    {selectedHighlightModal && (
+                        <div 
+                            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-sm animate-fadeIn"
+                            onClick={() => setSelectedHighlightModal(null)}
+                        >
+                            <div 
+                                className="bg-white border border-zinc-200 w-full max-w-lg p-6 md:p-8 rounded-2xl shadow-2xl space-y-6"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="flex items-start justify-between border-b border-zinc-100 pb-4">
+                                    <div className="flex items-center space-x-3">
+                                        <div className="w-10 h-10 rounded-xl bg-zinc-900 text-white flex items-center justify-center text-lg">
+                                            <i className={`fa-solid ${selectedHighlightModal.icon}`}></i>
+                                        </div>
+                                        <h3 className="text-lg font-bold text-zinc-900">{selectedHighlightModal.title}</h3>
+                                    </div>
+                                    <button 
+                                        onClick={() => setSelectedHighlightModal(null)}
+                                        className="w-8 h-8 rounded-full hover:bg-zinc-100 text-zinc-500 hover:text-zinc-900 flex items-center justify-center transition-colors"
+                                    >
+                                        <i className="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+
+                                <div className="space-y-3">
+                                    <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400">상세 내용</h4>
+                                    <ul className="space-y-2 bg-zinc-50 p-4 rounded-xl border border-zinc-200 text-xs text-zinc-700 leading-relaxed">
+                                        {selectedHighlightModal.bullets.map((b, i) => (
+                                            <li key={i} className="flex items-start space-x-2">
+                                                <span className="text-zinc-900 font-bold">•</span>
+                                                <span>{b}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                {selectedHighlightModal.link && (
+                                    <div className="pt-2">
+                                        <a 
+                                            href={selectedHighlightModal.link} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-1.5 text-xs text-zinc-900 font-bold hover:underline"
+                                        >
+                                            <span>연구실 홈페이지 바로가기</span>
+                                            <i className="fa-solid fa-up-right-from-square text-[10px]"></i>
+                                        </a>
+                                    </div>
+                                )}
+
+                                <div className="pt-2 flex justify-end">
+                                    <button 
+                                        onClick={() => setSelectedHighlightModal(null)}
+                                        className="px-5 py-2 rounded-xl bg-zinc-900 text-white text-xs font-bold hover:bg-zinc-800 transition-colors"
+                                    >
+                                        닫기
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Experience Detail Modal */}
+                    {selectedExperience && (
+                        <div 
+                            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-sm animate-fadeIn overflow-y-auto"
+                            onClick={() => setSelectedExperience(null)}
+                        >
+                            <div 
+                                className="bg-white border border-zinc-200 w-full max-w-2xl p-6 md:p-8 rounded-2xl shadow-2xl space-y-6 my-8 max-h-[90vh] overflow-y-auto"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="flex items-start justify-between border-b border-zinc-100 pb-4">
+                                    <div>
+                                        <span className="text-xs font-bold text-zinc-500 bg-zinc-100 px-2.5 py-0.5 rounded-md">{selectedExperience.period}</span>
+                                        <h3 className="text-xl font-bold text-zinc-900 mt-1">{selectedExperience.company}</h3>
+                                        <p className="text-xs text-zinc-500 font-medium">
+                                            {selectedExperience.role}{selectedExperience.type ? ` (${selectedExperience.type})` : ''}
+                                        </p>
+                                    </div>
+                                    <button 
+                                        onClick={() => setSelectedExperience(null)}
+                                        className="w-8 h-8 rounded-full hover:bg-zinc-100 text-zinc-500 hover:text-zinc-900 flex items-center justify-center transition-colors"
+                                    >
+                                        <i className="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+
+                                <div className="space-y-4 text-xs">
+                                    <div className="space-y-2">
+                                        <h4 className="font-bold uppercase tracking-wider text-zinc-900 flex items-center gap-1.5">
+                                            <i className="fa-solid fa-gears text-zinc-600"></i>
+                                            <span>주요 수행 업무</span>
+                                        </h4>
+                                        <div className="bg-zinc-50 p-4 rounded-xl border border-zinc-200 space-y-2">
+                                            {selectedExperience.actions.map((act, i) => (
+                                                <div key={i} className="flex items-start space-x-2 text-zinc-700">
+                                                    <span className="text-zinc-900 font-bold">•</span>
+                                                    <span className="leading-relaxed">{act}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {selectedExperience.results && selectedExperience.results.length > 0 && (
+                                        <div className="space-y-2">
+                                            <h4 className="font-bold uppercase tracking-wider text-zinc-900 flex items-center gap-1.5">
+                                                <i className="fa-solid fa-trophy text-zinc-600"></i>
+                                                <span>주요 성과</span>
+                                            </h4>
+                                            <div className="bg-zinc-50 p-4 rounded-xl border border-zinc-200 space-y-2">
+                                                {selectedExperience.results.map((res, i) => (
+                                                    <div key={i} className="flex items-start space-x-2 text-zinc-900 font-semibold">
+                                                        <i className="fa-solid fa-check text-xs mt-0.5 text-zinc-700"></i>
+                                                        <span className="leading-relaxed">{res}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="pt-2 flex justify-end">
+                                    <button
+                                        onClick={() => setSelectedExperience(null)}
+                                        className="px-6 py-2.5 rounded-xl bg-zinc-900 text-white text-xs font-bold hover:bg-zinc-800 transition-colors shadow-sm"
+                                    >
+                                        닫기
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Project Detail Modal */}
+                    {selectedProject && (
+                        <div 
+                            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-sm animate-fadeIn overflow-y-auto"
+                            onClick={() => setSelectedProject(null)}
+                        >
+                            <div 
+                                className="bg-white border border-zinc-200 w-full max-w-2xl p-6 md:p-8 rounded-2xl shadow-2xl space-y-6 my-8 max-h-[90vh] overflow-y-auto"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="flex items-start justify-between border-b border-zinc-100 pb-4">
+                                    <div className="space-y-1">
+                                        <div className="flex items-center space-x-2">
+                                            <span className="text-xs px-2.5 py-0.5 rounded bg-zinc-100 text-zinc-900 font-bold border border-zinc-200">
+                                                {selectedProject.categoryName}
+                                            </span>
+                                            <span className="text-xs text-zinc-400 font-medium">{selectedProject.period}</span>
+                                        </div>
+                                        <h3 className="text-xl md:text-2xl font-bold text-zinc-900">{selectedProject.title}</h3>
+                                        <p className="text-xs text-zinc-500 font-semibold">{selectedProject.organization}</p>
+                                    </div>
+                                    <button 
+                                        onClick={() => setSelectedProject(null)}
+                                        className="w-8 h-8 rounded-full hover:bg-zinc-100 text-zinc-500 hover:text-zinc-900 flex items-center justify-center transition-colors shrink-0"
+                                    >
+                                        <i className="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="space-y-2">
+                                        <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-900 flex items-center gap-1.5">
+                                            <i className="fa-solid fa-gears text-zinc-600"></i>
+                                            <span>주요 수행 업무</span>
+                                        </h4>
+                                        <div className="bg-zinc-50 rounded-xl p-4 border border-zinc-200 space-y-2">
+                                            {selectedProject.actions.map((act, i) => (
+                                                <div key={i} className="flex items-start space-x-2 text-xs text-zinc-700">
+                                                    <span className="text-zinc-900 font-bold">•</span>
+                                                    <span className="leading-relaxed">{act}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-900 flex items-center gap-1.5">
+                                            <i className="fa-solid fa-trophy text-zinc-600"></i>
+                                            <span>주요 성과</span>
+                                        </h4>
+                                        <div className="bg-zinc-50 rounded-xl p-4 border border-zinc-200 space-y-2">
+                                            {selectedProject.results.map((res, i) => (
+                                                <div key={i} className="flex items-start space-x-2 text-xs text-zinc-900 font-semibold">
+                                                    <i className="fa-solid fa-check text-xs mt-0.5 text-zinc-700"></i>
+                                                    <span className="leading-relaxed">{res}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="pt-2 flex justify-end">
+                                    <button
+                                        onClick={() => setSelectedProject(null)}
+                                        className="px-6 py-2.5 rounded-xl bg-zinc-900 text-white text-xs font-bold hover:bg-zinc-800 transition-colors shadow-sm"
+                                    >
+                                        닫기
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
